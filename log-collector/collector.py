@@ -155,3 +155,40 @@ def parse_opencanary(line: str) -> Optional[Event]:
                  if k not in ('src_host', 'src_port', 'utc_time',
                               'logtype', 'logdata', 'local_time')},
     )
+
+
+def tail_and_insert(conn, log_path: str, parser) -> None:
+    if not os.path.exists(log_path):
+        return
+    os.makedirs(OFFSETS_DIR, exist_ok=True)
+    offset_file = os.path.join(OFFSETS_DIR, os.path.basename(log_path) + '.offset')
+    try:
+        for line in Pygtail(log_path, offset_file=offset_file):
+            line = line.strip()
+            if not line:
+                continue
+            event = parser(line)
+            if event:
+                insert_event(conn, event)
+    except Exception as e:
+        log.error(f'Error tailing {log_path}: {e}')
+
+
+def main() -> None:
+    conn = connect_db()
+    last_retention = datetime.now(timezone.utc)
+
+    while True:
+        tail_and_insert(conn, COWRIE_LOG, parse_cowrie)
+        tail_and_insert(conn, OPENCANARY_LOG, parse_opencanary)
+
+        now = datetime.now(timezone.utc)
+        if (now - last_retention).total_seconds() > 86400:
+            run_retention(conn)
+            last_retention = now
+
+        time.sleep(POLL_INTERVAL)
+
+
+if __name__ == '__main__':
+    main()
