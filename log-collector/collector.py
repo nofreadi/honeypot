@@ -70,6 +70,58 @@ def parse_cowrie(line: str) -> Optional[Event]:
     )
 
 
+def connect_db() -> psycopg2.extensions.connection:
+    while True:
+        try:
+            conn = psycopg2.connect(
+                host=os.environ['POSTGRES_HOST'],
+                dbname=os.environ['POSTGRES_DB'],
+                user=os.environ['POSTGRES_USER'],
+                password=os.environ['POSTGRES_PASSWORD'],
+            )
+            log.info('Connected to postgres')
+            return conn
+        except psycopg2.OperationalError as e:
+            log.warning(f'DB connection failed: {e}, retrying in 5s')
+            time.sleep(5)
+
+
+def insert_event(conn, event: Event) -> None:
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            INSERT INTO events
+                (timestamp, source_ip, source_port, service, event_type,
+                 username, password, command, payload)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+            """,
+            (
+                event.timestamp,
+                event.source_ip,
+                event.source_port,
+                event.service,
+                event.event_type,
+                event.username,
+                event.password,
+                event.command,
+                json.dumps(event.payload),
+            ),
+        )
+    conn.commit()
+
+
+def run_retention(conn, days: int = RETENTION_DAYS) -> None:
+    with conn.cursor() as cur:
+        cur.execute(
+            "DELETE FROM events WHERE timestamp < NOW() - INTERVAL %s",
+            (f'{days} days',),
+        )
+        deleted = cur.rowcount
+    conn.commit()
+    if deleted:
+        log.info(f'Retention: deleted {deleted} events older than {days} days')
+
+
 def parse_opencanary(line: str) -> Optional[Event]:
     try:
         data = json.loads(line)
