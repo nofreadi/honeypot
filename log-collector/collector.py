@@ -71,4 +71,35 @@ def parse_cowrie(line: str) -> Optional[Event]:
 
 
 def parse_opencanary(line: str) -> Optional[Event]:
-    pass  # TODO
+    try:
+        data = json.loads(line)
+    except json.JSONDecodeError:
+        return None
+
+    mapping = OPENCANARY_TYPE_MAP.get(data.get('logtype'))
+    if not mapping:
+        return None
+
+    service, event_type = mapping
+    logdata = data.get('logdata', {})
+
+    try:
+        timestamp = datetime.strptime(
+            data.get('utc_time', ''), '%Y-%m-%d %H:%M:%S.%f'
+        ).replace(tzinfo=timezone.utc)
+    except ValueError:
+        timestamp = datetime.now(timezone.utc)
+
+    return Event(
+        timestamp=timestamp,
+        source_ip=data.get('src_host', ''),
+        source_port=data.get('src_port'),
+        service=service,
+        event_type=event_type,
+        username=logdata.get('USERNAME'),
+        password=logdata.get('PASSWORD'),
+        command=None,
+        payload={k: v for k, v in data.items()
+                 if k not in ('src_host', 'src_port', 'utc_time',
+                              'logtype', 'logdata', 'local_time')},
+    )
