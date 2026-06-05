@@ -32,6 +32,7 @@
         {
           "datasource": {"type": "postgres", "uid": "postgres-honeypot"},
           "editorMode": "code",
+          "rawQuery": true,
           "format": "table",
           "rawSql": "SELECT COUNT(*) AS value FROM events WHERE $__timeFilter(timestamp)",
           "refId": "A"
@@ -64,6 +65,7 @@
         {
           "datasource": {"type": "postgres", "uid": "postgres-honeypot"},
           "editorMode": "code",
+          "rawQuery": true,
           "format": "table",
           "rawSql": "SELECT COUNT(DISTINCT source_ip) AS value FROM events WHERE $__timeFilter(timestamp)",
           "refId": "A"
@@ -96,6 +98,7 @@
         {
           "datasource": {"type": "postgres", "uid": "postgres-honeypot"},
           "editorMode": "code",
+          "rawQuery": true,
           "format": "table",
           "rawSql": "SELECT COUNT(*) AS value FROM events WHERE $__timeFilter(timestamp) AND event_type = 'login_attempt'",
           "refId": "A"
@@ -141,6 +144,7 @@
         {
           "datasource": {"type": "postgres", "uid": "postgres-honeypot"},
           "editorMode": "code",
+          "rawQuery": true,
           "format": "time_series",
           "rawSql": "SELECT\n  $__timeGroupAlias(timestamp,$__interval),\n  service AS metric,\n  COUNT(*) AS value\nFROM events\nWHERE $__timeFilter(timestamp)\nGROUP BY 1, service\nORDER BY 1",
           "refId": "A"
@@ -166,6 +170,7 @@
         {
           "datasource": {"type": "postgres", "uid": "postgres-honeypot"},
           "editorMode": "code",
+          "rawQuery": true,
           "format": "table",
           "rawSql": "SELECT service, COUNT(*) AS count\nFROM events\nWHERE $__timeFilter(timestamp)\nGROUP BY service\nORDER BY count DESC",
           "refId": "A"
@@ -205,6 +210,7 @@
         {
           "datasource": {"type": "postgres", "uid": "postgres-honeypot"},
           "editorMode": "code",
+          "rawQuery": true,
           "format": "table",
           "rawSql": "SELECT\n  source_ip::text AS \"Source IP\",\n  COUNT(*) AS \"Attacks\"\nFROM events\nWHERE $__timeFilter(timestamp)\nGROUP BY source_ip\nORDER BY \"Attacks\" DESC\nLIMIT 10",
           "refId": "A"
@@ -248,6 +254,7 @@
         {
           "datasource": {"type": "postgres", "uid": "postgres-honeypot"},
           "editorMode": "code",
+          "rawQuery": true,
           "format": "table",
           "rawSql": "SELECT\n  timestamp AS \"Time\",\n  source_ip::text AS \"Source IP\",\n  service AS \"Service\",\n  event_type AS \"Event Type\",\n  COALESCE(username, '') AS \"Username\"\nFROM events\nWHERE $__timeFilter(timestamp)\nORDER BY timestamp DESC\nLIMIT 100",
           "refId": "A"
