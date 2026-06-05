@@ -2,7 +2,7 @@ apiVersion: 1
 datasources:
   - name: PostgreSQL
     uid: postgres-honeypot
-    type: postgres
+    type: grafana-postgresql-datasource
     url: postgres:5432
     database: honeypot
     user: honeypot

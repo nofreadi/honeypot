@@ -7,7 +7,7 @@
   "links": [],
   "panels": [
     {
-      "datasource": {"type": "postgres", "uid": "postgres-honeypot"},
+      "datasource": {"type": "grafana-postgresql-datasource", "uid": "postgres-honeypot"},
       "fieldConfig": {
         "defaults": {
           "color": {"mode": "thresholds"},
@@ -30,7 +30,7 @@
       "type": "stat",
       "targets": [
         {
-          "datasource": {"type": "postgres", "uid": "postgres-honeypot"},
+          "datasource": {"type": "grafana-postgresql-datasource", "uid": "postgres-honeypot"},
           "editorMode": "code",
           "rawQuery": true,
           "format": "table",
@@ -40,7 +40,7 @@
       ]
     },
     {
-      "datasource": {"type": "postgres", "uid": "postgres-honeypot"},
+      "datasource": {"type": "grafana-postgresql-datasource", "uid": "postgres-honeypot"},
       "fieldConfig": {
         "defaults": {
           "color": {"mode": "thresholds"},
@@ -63,7 +63,7 @@
       "type": "stat",
       "targets": [
         {
-          "datasource": {"type": "postgres", "uid": "postgres-honeypot"},
+          "datasource": {"type": "grafana-postgresql-datasource", "uid": "postgres-honeypot"},
           "editorMode": "code",
           "rawQuery": true,
           "format": "table",
@@ -73,7 +73,7 @@
       ]
     },
     {
-      "datasource": {"type": "postgres", "uid": "postgres-honeypot"},
+      "datasource": {"type": "grafana-postgresql-datasource", "uid": "postgres-honeypot"},
       "fieldConfig": {
         "defaults": {
           "color": {"mode": "thresholds"},
@@ -96,7 +96,7 @@
       "type": "stat",
       "targets": [
         {
-          "datasource": {"type": "postgres", "uid": "postgres-honeypot"},
+          "datasource": {"type": "grafana-postgresql-datasource", "uid": "postgres-honeypot"},
           "editorMode": "code",
           "rawQuery": true,
           "format": "table",
@@ -106,7 +106,7 @@
       ]
     },
     {
-      "datasource": {"type": "postgres", "uid": "postgres-honeypot"},
+      "datasource": {"type": "grafana-postgresql-datasource", "uid": "postgres-honeypot"},
       "fieldConfig": {
         "defaults": {
           "color": {"mode": "palette-classic"},
@@ -142,7 +142,7 @@
       "type": "timeseries",
       "targets": [
         {
-          "datasource": {"type": "postgres", "uid": "postgres-honeypot"},
+          "datasource": {"type": "grafana-postgresql-datasource", "uid": "postgres-honeypot"},
           "editorMode": "code",
           "rawQuery": true,
           "format": "time_series",
@@ -152,7 +152,7 @@
       ]
     },
     {
-      "datasource": {"type": "postgres", "uid": "postgres-honeypot"},
+      "datasource": {"type": "grafana-postgresql-datasource", "uid": "postgres-honeypot"},
       "fieldConfig": {
         "defaults": {"color": {"mode": "palette-classic"}},
         "overrides": []
@@ -168,7 +168,7 @@
       "type": "piechart",
       "targets": [
         {
-          "datasource": {"type": "postgres", "uid": "postgres-honeypot"},
+          "datasource": {"type": "grafana-postgresql-datasource", "uid": "postgres-honeypot"},
           "editorMode": "code",
           "rawQuery": true,
           "format": "table",
@@ -178,7 +178,7 @@
       ]
     },
     {
-      "datasource": {"type": "postgres", "uid": "postgres-honeypot"},
+      "datasource": {"type": "grafana-postgresql-datasource", "uid": "postgres-honeypot"},
       "fieldConfig": {
         "defaults": {},
         "overrides": [
@@ -208,7 +208,7 @@
       "type": "table",
       "targets": [
         {
-          "datasource": {"type": "postgres", "uid": "postgres-honeypot"},
+          "datasource": {"type": "grafana-postgresql-datasource", "uid": "postgres-honeypot"},
           "editorMode": "code",
           "rawQuery": true,
           "format": "table",
@@ -218,7 +218,7 @@
       ]
     },
     {
-      "datasource": {"type": "postgres", "uid": "postgres-honeypot"},
+      "datasource": {"type": "grafana-postgresql-datasource", "uid": "postgres-honeypot"},
       "fieldConfig": {
         "defaults": {},
         "overrides": [
@@ -252,7 +252,7 @@
       "type": "table",
       "targets": [
         {
-          "datasource": {"type": "postgres", "uid": "postgres-honeypot"},
+          "datasource": {"type": "grafana-postgresql-datasource", "uid": "postgres-honeypot"},
           "editorMode": "code",
           "rawQuery": true,
           "format": "table",
