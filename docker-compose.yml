@@ -34,7 +34,7 @@ services:
       POSTGRES_HOST: postgres
       POSTGRES_DB: honeypot
       POSTGRES_USER: honeypot
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
+      POSTGRES_PASSWORD: changeme
       COWRIE_LOG: /var/log/cowrie/cowrie.json
       OPENCANARY_LOG: /var/log/opencanary/opencanary.log
       OFFSETS_DIR: /var/offsets
@@ -51,7 +51,7 @@ services:
     environment:
       POSTGRES_DB: honeypot
       POSTGRES_USER: honeypot
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
+      POSTGRES_PASSWORD: changeme
     volumes:
       - postgres-data:/var/lib/postgresql/data
     networks:
@@ -62,14 +62,13 @@ services:
     container_name: grafana
     restart: unless-stopped
     environment:
-      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD:-admin}
+      GF_SECURITY_ADMIN_PASSWORD: admin
       GF_USERS_ALLOW_SIGN_UP: "false"
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
+      POSTGRES_PASSWORD: changeme
     volumes:
       - grafana-data:/var/lib/grafana
     ports:
       - "${GRAFANA_PORT:-3000}:3000"
-
     depends_on:
       - postgres
     networks:
