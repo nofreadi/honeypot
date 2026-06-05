@@ -1,0 +1,268 @@
+{
+  "annotations": {"list": []},
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": null,
+  "links": [],
+  "panels": [
+    {
+      "datasource": {"type": "postgres", "uid": "postgres-honeypot"},
+      "fieldConfig": {
+        "defaults": {
+          "color": {"mode": "thresholds"},
+          "thresholds": {"mode": "absolute", "steps": [{"color": "blue", "value": null}]},
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {"h": 4, "w": 8, "x": 0, "y": 0},
+      "id": 1,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false},
+        "textMode": "auto"
+      },
+      "title": "Total Events",
+      "type": "stat",
+      "targets": [
+        {
+          "datasource": {"type": "postgres", "uid": "postgres-honeypot"},
+          "editorMode": "code",
+          "format": "table",
+          "rawSql": "SELECT COUNT(*) AS value FROM events WHERE $__timeFilter(timestamp)",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "datasource": {"type": "postgres", "uid": "postgres-honeypot"},
+      "fieldConfig": {
+        "defaults": {
+          "color": {"mode": "thresholds"},
+          "thresholds": {"mode": "absolute", "steps": [{"color": "orange", "value": null}]},
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {"h": 4, "w": 8, "x": 8, "y": 0},
+      "id": 2,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false},
+        "textMode": "auto"
+      },
+      "title": "Unique Source IPs",
+      "type": "stat",
+      "targets": [
+        {
+          "datasource": {"type": "postgres", "uid": "postgres-honeypot"},
+          "editorMode": "code",
+          "format": "table",
+          "rawSql": "SELECT COUNT(DISTINCT source_ip) AS value FROM events WHERE $__timeFilter(timestamp)",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "datasource": {"type": "postgres", "uid": "postgres-honeypot"},
+      "fieldConfig": {
+        "defaults": {
+          "color": {"mode": "thresholds"},
+          "thresholds": {"mode": "absolute", "steps": [{"color": "red", "value": null}]},
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {"h": 4, "w": 8, "x": 16, "y": 0},
+      "id": 3,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false},
+        "textMode": "auto"
+      },
+      "title": "Login Attempts",
+      "type": "stat",
+      "targets": [
+        {
+          "datasource": {"type": "postgres", "uid": "postgres-honeypot"},
+          "editorMode": "code",
+          "format": "table",
+          "rawSql": "SELECT COUNT(*) AS value FROM events WHERE $__timeFilter(timestamp) AND event_type = 'login_attempt'",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "datasource": {"type": "postgres", "uid": "postgres-honeypot"},
+      "fieldConfig": {
+        "defaults": {
+          "color": {"mode": "palette-classic"},
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 20,
+            "gradientMode": "none",
+            "hideFrom": {"legend": false, "tooltip": false, "viz": false},
+            "lineInterpolation": "linear",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {"type": "linear"},
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {"group": "A", "mode": "none"},
+            "thresholdsStyle": {"mode": "off"}
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {"h": 8, "w": 24, "x": 0, "y": 4},
+      "id": 4,
+      "options": {
+        "legend": {"calcs": [], "displayMode": "list", "placement": "bottom", "showLegend": true},
+        "tooltip": {"mode": "multi", "sort": "none"}
+      },
+      "title": "Events Over Time",
+      "type": "timeseries",
+      "targets": [
+        {
+          "datasource": {"type": "postgres", "uid": "postgres-honeypot"},
+          "editorMode": "code",
+          "format": "time_series",
+          "rawSql": "SELECT\n  $__timeGroupAlias(timestamp,$__interval),\n  service AS metric,\n  COUNT(*) AS value\nFROM events\nWHERE $__timeFilter(timestamp)\nGROUP BY 1, service\nORDER BY 1",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "datasource": {"type": "postgres", "uid": "postgres-honeypot"},
+      "fieldConfig": {
+        "defaults": {"color": {"mode": "palette-classic"}},
+        "overrides": []
+      },
+      "gridPos": {"h": 8, "w": 6, "x": 0, "y": 12},
+      "id": 5,
+      "options": {
+        "legend": {"displayMode": "table", "placement": "right", "showLegend": true, "values": ["percent"]},
+        "pieType": "pie",
+        "tooltip": {"mode": "single", "sort": "none"}
+      },
+      "title": "Events by Service",
+      "type": "piechart",
+      "targets": [
+        {
+          "datasource": {"type": "postgres", "uid": "postgres-honeypot"},
+          "editorMode": "code",
+          "format": "table",
+          "rawSql": "SELECT service, COUNT(*) AS count\nFROM events\nWHERE $__timeFilter(timestamp)\nGROUP BY service\nORDER BY count DESC",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "datasource": {"type": "postgres", "uid": "postgres-honeypot"},
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": [
+          {
+            "matcher": {"id": "byName", "options": "Source IP"},
+            "properties": [{"id": "custom.width", "value": 130}]
+          },
+          {
+            "matcher": {"id": "byName", "options": "Attacks"},
+            "properties": [
+              {"id": "custom.width", "value": 70},
+              {"id": "custom.displayMode", "value": "color-background"},
+              {"id": "color", "value": {"mode": "thresholds"}},
+              {"id": "thresholds", "value": {"mode": "absolute", "steps": [{"color": "green", "value": null}, {"color": "orange", "value": 5}, {"color": "red", "value": 20}]}}
+            ]
+          }
+        ]
+      },
+      "gridPos": {"h": 8, "w": 6, "x": 6, "y": 12},
+      "id": 6,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {"show": false},
+        "showHeader": true
+      },
+      "title": "Top Attacking IPs",
+      "type": "table",
+      "targets": [
+        {
+          "datasource": {"type": "postgres", "uid": "postgres-honeypot"},
+          "editorMode": "code",
+          "format": "table",
+          "rawSql": "SELECT\n  source_ip::text AS \"Source IP\",\n  COUNT(*) AS \"Attacks\"\nFROM events\nWHERE $__timeFilter(timestamp)\nGROUP BY source_ip\nORDER BY \"Attacks\" DESC\nLIMIT 10",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "datasource": {"type": "postgres", "uid": "postgres-honeypot"},
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": [
+          {
+            "matcher": {"id": "byName", "options": "Time"},
+            "properties": [{"id": "custom.width", "value": 160}]
+          },
+          {
+            "matcher": {"id": "byName", "options": "Source IP"},
+            "properties": [{"id": "custom.width", "value": 120}]
+          },
+          {
+            "matcher": {"id": "byName", "options": "Service"},
+            "properties": [{"id": "custom.width", "value": 70}]
+          },
+          {
+            "matcher": {"id": "byName", "options": "Event Type"},
+            "properties": [{"id": "custom.width", "value": 110}]
+          }
+        ]
+      },
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 12},
+      "id": 7,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {"show": false},
+        "showHeader": true,
+        "sortBy": [{"desc": true, "displayName": "Time"}]
+      },
+      "title": "Recent Events",
+      "type": "table",
+      "targets": [
+        {
+          "datasource": {"type": "postgres", "uid": "postgres-honeypot"},
+          "editorMode": "code",
+          "format": "table",
+          "rawSql": "SELECT\n  timestamp AS \"Time\",\n  source_ip::text AS \"Source IP\",\n  service AS \"Service\",\n  event_type AS \"Event Type\",\n  COALESCE(username, '') AS \"Username\"\nFROM events\nWHERE $__timeFilter(timestamp)\nORDER BY timestamp DESC\nLIMIT 100",
+          "refId": "A"
+        }
+      ]
+    }
+  ],
+  "refresh": "30s",
+  "schemaVersion": 38,
+  "tags": ["honeypot"],
+  "templating": {"list": []},
+  "time": {"from": "now-24h", "to": "now"},
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "Honeypot Dashboard",
+  "uid": "honeypot-main",
+  "version": 1
+}

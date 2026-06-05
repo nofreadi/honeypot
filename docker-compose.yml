@@ -59,11 +59,30 @@ services:
     networks:
       - honeypot-net
 
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    restart: unless-stopped
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD:-admin}
+      GF_USERS_ALLOW_SIGN_UP: "false"
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      - grafana-data:/var/lib/grafana
+    ports:
+      - "${GRAFANA_PORT:-3000}:3000"
+    depends_on:
+      - postgres
+    networks:
+      - honeypot-net
+
 volumes:
   cowrie-logs:
   opencanary-logs:
   postgres-data:
   collector-offsets:
+  grafana-data:
 
 networks:
   honeypot-net:
