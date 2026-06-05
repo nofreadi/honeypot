@@ -6,10 +6,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 RUN pip install --no-cache-dir opencanary
 
-RUN mkdir -p /etc/opencanary /var/log/opencanary
+RUN mkdir -p /etc/opencanaryd /var/log/opencanary
 
-COPY opencanary.conf /etc/opencanary/opencanary.conf
+COPY opencanary.conf /etc/opencanaryd/opencanary.conf
 
 EXPOSE 80 3306
 
-CMD ["opencanaryd", "--start", "--uid=nobody", "--gid=nogroup"]
+CMD ["opencanaryd", "--dev"]

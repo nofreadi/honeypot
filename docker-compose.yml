@@ -5,7 +5,7 @@ services:
     restart: unless-stopped
     volumes:
       - ./cowrie/cowrie.cfg:/cowrie/etc/cowrie.cfg:ro
-      - cowrie-logs:/cowrie/var/log/cowrie
+      - cowrie-logs:/cowrie/cowrie-git/var/log/cowrie
     ports:
       - "${SSH_PORT:-22}:2222"
     networks:
