@@ -1,0 +1,70 @@
+services:
+  cowrie:
+    image: cowrie/cowrie:latest
+    container_name: cowrie
+    restart: unless-stopped
+    volumes:
+      - ./cowrie/cowrie.cfg:/cowrie/etc/cowrie.cfg:ro
+      - cowrie-logs:/cowrie/var/log/cowrie
+    ports:
+      - "${SSH_PORT:-22}:2222"
+    networks:
+      - honeypot-net
+
+  opencanary:
+    build: ./opencanary
+    container_name: opencanary
+    restart: unless-stopped
+    volumes:
+      - opencanary-logs:/var/log/opencanary
+    ports:
+      - "${HTTP_PORT:-80}:80"
+      - "${MYSQL_PORT:-3306}:3306"
+    networks:
+      - honeypot-net
+
+  log-collector:
+    build: ./log-collector
+    container_name: log-collector
+    restart: unless-stopped
+    volumes:
+      - cowrie-logs:/var/log/cowrie:ro
+      - opencanary-logs:/var/log/opencanary:ro
+      - collector-offsets:/var/offsets
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_DB: honeypot
+      POSTGRES_USER: honeypot
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      COWRIE_LOG: /var/log/cowrie/cowrie.json
+      OPENCANARY_LOG: /var/log/opencanary/opencanary.log
+      OFFSETS_DIR: /var/offsets
+      POLL_INTERVAL: "2"
+    depends_on:
+      - postgres
+    networks:
+      - honeypot-net
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: honeypot
+      POSTGRES_USER: honeypot
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - honeypot-net
+
+volumes:
+  cowrie-logs:
+  opencanary-logs:
+  postgres-data:
+  collector-offsets:
+
+networks:
+  honeypot-net:
+    driver: bridge
