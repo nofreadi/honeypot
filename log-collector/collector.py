@@ -28,6 +28,7 @@ COWRIE_EVENT_MAP = {
 
 OPENCANARY_TYPE_MAP = {
     3000: ('http',  'login_attempt'),
+    3001: ('http',  'login_attempt'),
     8001: ('mysql', 'login_attempt'),
 }
 
